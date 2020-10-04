@@ -596,6 +596,10 @@ const VISITOR: Visitor<MutableAsset> = {
     // For each specifier, rename the local variables to point to the imported name.
     // This will be replaced by the final variable name of the resolved asset in the packager.
     for (let specifier of path.node.specifiers) {
+      if (!nullthrows(path.scope.getBinding(specifier.local.name)).referenced) {
+        // Ignore unused specifiers, especially for when TS was poorly transpiled.
+        continue;
+      }
       let id = getIdentifier(asset, 'import', specifier.local.name);
 
       if (dep) {

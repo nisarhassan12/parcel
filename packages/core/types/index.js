@@ -1323,3 +1323,19 @@ export interface IDisposable {
 export interface AsyncSubscription {
   unsubscribe(): Promise<mixed>;
 }
+
+export type TraceEvent = {|
+  start: number,
+  dur: number,
+  name: string,
+|};
+
+export type Measurement = {|end: () => void|};
+
+export interface Tracer {
+  createMeasurement(name: string): Measurement;
+}
+
+export interface SubscribableTracer extends Tracer {
+  addListener(listener: (TraceEvent) => mixed): IDisposable;
+}
